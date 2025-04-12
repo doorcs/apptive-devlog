@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: "devlog"
+
+  config:
+    import: optional:file:.env[.properties] # dotenv load
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${URL}
+    username: ${USERNAME} # password: 생략
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create # 최초 DB 설정시에만 create, update 사용. Entity 클래스를 기반으로 테이블을 생성해줌
+    properties:
+      hibernate:
+        format_sql: true
