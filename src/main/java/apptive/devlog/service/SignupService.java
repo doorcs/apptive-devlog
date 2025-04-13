@@ -38,7 +38,7 @@ public class SignupService {
         user.setName(name);
         user.setNickname(nickname);
         user.setGender(gender);
-        user.setRole("ROLE_USER");
+        user.setRole("USER"); // `ROLE_USER`가 아니라 `USER`로 저장해준 뒤, 처리하는 단계에서 "ROLE_"를 앞에 붙여줌
 
         userRepository.save(user);
         return true;
