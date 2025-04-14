@@ -15,7 +15,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: create # 최초 DB 설정시에만 create, update 사용. Entity 클래스를 기반으로 테이블을 생성해줌
+      ddl-auto: none # 최초 DB 설정시에만 create, update 사용. Entity 클래스를 기반으로 테이블을 생성해줌
     properties:
       hibernate:
         format_sql: true
+
+  jwt:
+    secret: ${JWT_SECRET} # @Value("${spring.jwt.secret}")
