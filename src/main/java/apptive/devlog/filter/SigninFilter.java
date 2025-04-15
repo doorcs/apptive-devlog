@@ -63,7 +63,7 @@ public class SigninFilter extends OncePerRequestFilter {
             return; // 필터 체인에 있는 다음 필터로 넘어가지 않고 종료
         }
 
-        String token = jwtUtil.createJwt(user.getNickname(), user.getRole(), 86400L); // 일단 하루짜리 토큰을 발급 -> 추후 리팩토링
+        String token = jwtUtil.createJwt(user.getNickname(), user.getRole(), 86400000L); // 일단 하루짜리 토큰을 발급 -> 추후 리팩토링
         rsp.setStatus(HttpServletResponse.SC_OK);
         rsp.setContentType(MediaType.APPLICATION_JSON_VALUE);
         rsp.getWriter().write("{\"token\": \"Bearer " + token + "\"}"); // 토큰을 json 형태로 rsp에 담아 return
