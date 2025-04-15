@@ -54,8 +54,8 @@ public class SigninFilter extends OncePerRequestFilter {
         String body = StreamUtils.copyToString(req.getInputStream(), StandardCharsets.UTF_8);
         SigninDto signinDto = objectMapper.readValue(body, SigninDto.class);
 
-        User user = userRepository.findByEmail(signinDto.getEmail());
-        if (user == null || !passwordEncoder.matches(signinDto.getPassword(), user.getPassword())) {
+        User user = userRepository.findByEmail(signinDto.email());
+        if (user == null || !passwordEncoder.matches(signinDto.password(), user.getPassword())) {
             rsp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             rsp.setContentType(MediaType.APPLICATION_JSON_VALUE);
             rsp.setCharacterEncoding("UTF-8");
