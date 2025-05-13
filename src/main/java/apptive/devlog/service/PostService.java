@@ -55,4 +55,17 @@ public class PostService {
         postRepository.save(newPost);
         return true;
     }
+
+    public boolean deletePost(Long postId, String nickname) {
+        User user = userRepository.findByNickname(nickname);
+        Optional<Post> currPost = postRepository.findById(postId);
+
+        if (user == null || currPost.isEmpty()) return false;
+
+        Post post = currPost.get();
+        if (!post.getUser().getNickname().equals(user.getNickname())) return false;
+
+        postRepository.delete(post);
+        return true;
+    }
 }
