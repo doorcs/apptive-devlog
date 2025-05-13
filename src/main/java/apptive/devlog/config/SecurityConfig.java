@@ -50,7 +50,7 @@ public class SecurityConfig {
             .addFilterAt(signinFilter, UsernamePasswordAuthenticationFilter.class) // 기존 UsernamePassword... 필터를 대체
             .authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/", "/signup", "/signin").permitAll()
-                .requestMatchers("/me").hasRole("USER")
+                .requestMatchers("/me", "/posts").hasRole("USER")
                 .anyRequest().authenticated())
             .sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
