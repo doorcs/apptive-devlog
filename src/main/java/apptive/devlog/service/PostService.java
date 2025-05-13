@@ -1,10 +1,13 @@
 package apptive.devlog.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import apptive.devlog.domain.Post;
 import apptive.devlog.domain.User;
 import apptive.devlog.dto.PostCreateDto;
+import apptive.devlog.dto.PostUpdateDto;
 import apptive.devlog.repository.PostRepository;
 import apptive.devlog.repository.UserRepository;
 
@@ -33,6 +36,23 @@ public class PostService {
         post.setContent(content);
         post.setUser(user);
         postRepository.save(post);
+        return true;
+    }
+
+    public boolean updatePost(Long postId, PostUpdateDto postUpdateDto, String nickname) {
+        String title = postUpdateDto.title();
+        String content = postUpdateDto.content();
+        User user = userRepository.findByNickname(nickname);
+        Optional<Post> currPost = postRepository.findById(postId);
+
+        if (title == null || content == null || user == null || currPost.isEmpty() || title.isEmpty() || content.isEmpty()) {
+            return false;
+        }
+
+        Post newPost = currPost.get();
+        newPost.setTitle(title);
+        newPost.setContent(content);
+        postRepository.save(newPost);
         return true;
     }
 }
