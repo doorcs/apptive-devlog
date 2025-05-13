@@ -1,11 +1,15 @@
 package apptive.devlog.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,4 +40,7 @@ public class User {
 
     @Column(nullable = false)
     private String role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<>(); // User : Post = 1 : N
 }
