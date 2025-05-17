@@ -1,5 +1,6 @@
 package apptive.devlog.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -67,5 +68,16 @@ public class PostService {
 
         postRepository.delete(post);
         return true;
+    }
+
+    public List<Post> getAllPosts() {
+        return postRepository.findAll();
+    }
+
+    public List<Post> getAllPostsByNickname(String nickname) {
+        User user = userRepository.findByNickname(nickname);
+        if (user == null) return null;
+
+        return postRepository.findAllByUser(user);
     }
 }
