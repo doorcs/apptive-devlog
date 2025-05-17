@@ -2,6 +2,7 @@ package apptive.devlog.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -50,7 +51,10 @@ public class SecurityConfig {
             .addFilterAt(signinFilter, UsernamePasswordAuthenticationFilter.class) // 기존 UsernamePassword... 필터를 대체
             .authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/", "/signup", "/signin").permitAll()
-                .requestMatchers("/me").hasRole("USER")
+                .requestMatchers(HttpMethod.GET,  "/posts").permitAll()
+                .requestMatchers(HttpMethod.POST,  "/posts").hasRole("USER")
+                .requestMatchers(HttpMethod.PUT, "/posts").hasRole("USER")
+                .requestMatchers(HttpMethod.DELETE, "/posts").hasRole("USER")
                 .anyRequest().authenticated())
             .sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
