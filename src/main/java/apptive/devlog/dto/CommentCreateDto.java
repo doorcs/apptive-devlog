@@ -1,4 +1,4 @@
 package apptive.devlog.dto;
 
-public record CommentCreateDto(String content, Long userId, Long parentCommentId) {
+public record CommentCreateDto(String content, Long parentCommentId) {
 }
