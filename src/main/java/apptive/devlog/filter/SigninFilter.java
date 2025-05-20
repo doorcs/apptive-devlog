@@ -18,25 +18,15 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class SigninFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
-
-    public SigninFilter(
-        UserRepository userRepository,
-        PasswordEncoder passwordEncoder,
-        JwtUtil jwtUtil,
-        ObjectMapper objectMapper
-    ) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-        this.objectMapper = objectMapper;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse rsp, FilterChain chain)
