@@ -1,21 +1,20 @@
 package apptive.devlog.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
@@ -41,6 +40,25 @@ public class User {
     @Column(nullable = false)
     private String role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Post> posts = new ArrayList<>(); // User : Post = 1 : N
+    @Column
+    private LocalDateTime deletedAt; // nullable
+
+    public static User of(String email, String password, String name, String nickname, Gender gender, String role) {
+        User user = new User(); // protected
+        user.email = email;
+        user.password = password;
+        user.name = name;
+        user.nickname = nickname;
+        user.gender = gender;
+        user.role = role;
+        return user;
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeleted() {
+        return this.deletedAt != null;
+    }
 }
