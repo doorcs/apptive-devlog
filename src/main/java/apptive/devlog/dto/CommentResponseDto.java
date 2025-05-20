@@ -1,4 +1,4 @@
 package apptive.devlog.dto;
 
-public record CommentResponseDto(String nickname, String content) {
+public record CommentResponseDto(String nickname, String content, boolean isReply) {
 }
