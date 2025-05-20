@@ -20,17 +20,14 @@ import apptive.devlog.dto.PostUpdateDto;
 import apptive.devlog.dto.PostResponseDto;
 import apptive.devlog.jwt.JwtUtil;
 import apptive.devlog.service.PostService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
     private final JwtUtil jwtUtil;
-
-    public PostController(PostService postService, JwtUtil jwtUtil) {
-        this.postService = postService;
-        this.jwtUtil = jwtUtil;
-    }
 
     @PostMapping("/posts")
     public ResponseEntity<String> createPost(

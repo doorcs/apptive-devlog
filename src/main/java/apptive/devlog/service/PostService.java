@@ -11,17 +11,14 @@ import apptive.devlog.dto.PostCreateDto;
 import apptive.devlog.dto.PostUpdateDto;
 import apptive.devlog.repository.PostRepository;
 import apptive.devlog.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-    }
 
     public boolean createPost(PostCreateDto postCreateDto, String nickname) {
         String title = postCreateDto.title();

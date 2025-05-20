@@ -7,17 +7,14 @@ import apptive.devlog.domain.Gender;
 import apptive.devlog.domain.User;
 import apptive.devlog.dto.SignupDto;
 import apptive.devlog.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class SignupService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public SignupService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    } // lombok의 `@RequiredArgsConstructor`를 사용?
 
     public boolean signupProcess(SignupDto signupDto) {
         String email = signupDto.email();

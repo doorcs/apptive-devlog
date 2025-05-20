@@ -7,16 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import apptive.devlog.dto.SignupDto;
 import apptive.devlog.service.SignupService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 public class SignupController {
 
     private final SignupService signupService;
-
-    // @Autowired 어노테이션을 통해 필드를 주입받을 수도 있지만, 생성자 주입 방식이 더 권장됨
-    public SignupController(SignupService signupService) {
-        this.signupService = signupService;
-    } // lombok의 `@RequiredArgsConstructor` 사용?
 
     @PostMapping("/signup")
     public ResponseEntity<String> SignupProcess(@RequestBody SignupDto signupDto) {

@@ -18,20 +18,16 @@ import apptive.devlog.filter.JwtFilter;
 import apptive.devlog.filter.SigninFilter;
 import apptive.devlog.jwt.JwtUtil;
 import apptive.devlog.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
-
-    public SecurityConfig(JwtUtil jwtUtil, UserRepository userRepository, ObjectMapper objectMapper) {
-        this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
-        this.objectMapper = objectMapper;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -52,8 +48,8 @@ public class SecurityConfig {
             .addFilterAt(signinFilter, UsernamePasswordAuthenticationFilter.class) // 기존 UsernamePassword... 필터를 대체
             .authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/", "/signup", "/signin").permitAll()
-                .requestMatchers(HttpMethod.GET,  "/posts").permitAll()
-                .requestMatchers(HttpMethod.POST,  "/posts").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/posts").permitAll()
+                .requestMatchers(HttpMethod.POST, "/posts").hasRole("USER")
                 .requestMatchers(HttpMethod.PUT, "/posts").hasRole("USER")
                 .requestMatchers(HttpMethod.DELETE, "/posts").hasRole("USER")
                 .anyRequest().authenticated())
