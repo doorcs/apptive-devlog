@@ -7,19 +7,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import apptive.devlog.dto.SignupDto;
-import apptive.devlog.service.SignupService;
+import apptive.devlog.service.AuthService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class SignupController {
+public class AuthController {
 
-    private final SignupService signupService;
+    private final AuthService authService;
 
-    @PostMapping("/signup")
+    @PostMapping("/auth/signup")
     public ResponseEntity<String> SignupProcess(@RequestBody SignupDto signupDto) {
-        boolean success = signupService.signupProcess(signupDto);
+        boolean success = authService.signupProcess(signupDto);
 
         if (success) return ResponseEntity.ok().body("회원가입 성공");
         else return ResponseEntity.badRequest().body("회원가입 실패");
