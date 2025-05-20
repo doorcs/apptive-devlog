@@ -2,6 +2,7 @@ package apptive.devlog.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import apptive.devlog.dto.SignupDto;
@@ -18,7 +19,7 @@ public class SignupController {
     } // lombok의 `@RequiredArgsConstructor` 사용?
 
     @PostMapping("/signup")
-    public ResponseEntity<String> SignupProcess(SignupDto signupDto) {
+    public ResponseEntity<String> SignupProcess(@RequestBody SignupDto signupDto) {
         boolean success = signupService.signupProcess(signupDto);
 
         if (success) return ResponseEntity.ok().body("회원가입 성공");
