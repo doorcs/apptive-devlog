@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import apptive.devlog.domain.Post;
 import apptive.devlog.domain.User;
@@ -11,18 +12,16 @@ import apptive.devlog.dto.PostCreateDto;
 import apptive.devlog.dto.PostUpdateDto;
 import apptive.devlog.repository.PostRepository;
 import apptive.devlog.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-    }
-
+    @Transactional
     public boolean createPost(PostCreateDto postCreateDto, String nickname) {
         String title = postCreateDto.title();
         String content = postCreateDto.content();
@@ -32,14 +31,13 @@ public class PostService {
             return false;
         }
 
-        Post post = new Post();
-        post.setTitle(title);
-        post.setContent(content);
-        post.setUser(user);
+        Post post = Post.of(title, content, user.getId());
+
         postRepository.save(post);
         return true;
     }
 
+    @Transactional
     public boolean updatePost(Long postId, PostUpdateDto postUpdateDto, String nickname) {
         String title = postUpdateDto.title();
         String content = postUpdateDto.content();
@@ -57,6 +55,7 @@ public class PostService {
         return true;
     }
 
+    @Transactional
     public boolean deletePost(Long postId, String nickname) {
         User user = userRepository.findByNickname(nickname);
         Optional<Post> currPost = postRepository.findById(postId);
@@ -64,20 +63,31 @@ public class PostService {
         if (user == null || currPost.isEmpty()) return false;
 
         Post post = currPost.get();
-        if (!post.getUser().getNickname().equals(user.getNickname())) return false;
+        if (post.isDeleted() || !post.getUserId().equals(user.getId())) return false;
 
-        postRepository.delete(post);
+        post.delete();
         return true;
     }
 
+    @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        List<Post> tmp = postRepository.findAll();
+        return maskDeletedPosts(tmp);
     }
 
+    @Transactional(readOnly = true)
     public List<Post> getAllPostsByNickname(String nickname) {
         User user = userRepository.findByNickname(nickname);
-        if (user == null) return null;
+        if (user == null || user.isDeleted()) return null;
 
-        return postRepository.findAllByUser(user);
+        List<Post> tmp = postRepository.findAllByUserId(user.getId());
+        if (tmp == null || tmp.isEmpty()) return null;
+        return maskDeletedPosts(tmp);
+    }
+
+    private List<Post> maskDeletedPosts(List<Post> posts) {
+        return posts.stream()
+            .filter(post -> !post.isDeleted())
+            .toList();
     }
 }

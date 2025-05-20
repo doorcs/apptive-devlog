@@ -18,7 +18,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class SigninFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
@@ -26,23 +28,11 @@ public class SigninFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
 
-    public SigninFilter(
-        UserRepository userRepository,
-        PasswordEncoder passwordEncoder,
-        JwtUtil jwtUtil,
-        ObjectMapper objectMapper
-    ) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-        this.objectMapper = objectMapper;
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse rsp, FilterChain chain)
         throws ServletException, IOException {
 
-        if (!req.getRequestURI().equals("/signin") || !req.getMethod().equals("POST")) {
+        if (!req.getRequestURI().equals("/api/v1/auth/signin") || !req.getMethod().equals("POST")) {
             chain.doFilter(req, rsp);
             return;
         } // 로그인 요청 && POST 요청이 아닐 경우 다음 filter로 넘겨주기

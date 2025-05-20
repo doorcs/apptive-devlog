@@ -2,23 +2,22 @@ package apptive.devlog.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import apptive.devlog.domain.Gender;
 import apptive.devlog.domain.User;
 import apptive.devlog.dto.SignupDto;
 import apptive.devlog.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
-public class SignupService {
+@RequiredArgsConstructor
+public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public SignupService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    } // lombok의 `@RequiredArgsConstructor`를 사용?
-
+    @Transactional
     public boolean signupProcess(SignupDto signupDto) {
         String email = signupDto.email();
         String password = signupDto.password();
@@ -26,21 +25,30 @@ public class SignupService {
         String nickname = signupDto.nickname();
         Gender gender = signupDto.gender();
 
+        if (email == null || password == null || name == null || nickname == null || gender == null || email.isEmpty()
+            || password.isEmpty() || name.isEmpty() || nickname.isEmpty() || gender.toString().isEmpty()) {
+            return false;
+        }
+
         Boolean isEmailDuplicated = userRepository.existsByEmail(email);
         Boolean isNicknameDuplicated = userRepository.existsByNickname(nickname);
 
         if (isEmailDuplicated || isNicknameDuplicated)
             return false;
 
-        User user = new User(); // setter를 쓰지 않고 builder를 활용하는 방법 공부해보기
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setName(name);
-        user.setNickname(nickname);
-        user.setGender(gender);
-        user.setRole("USER"); // `ROLE_USER`가 아니라 `USER`로 저장해준 뒤, 처리하는 단계에서 "ROLE_"를 앞에 붙여줌
+        // 요구사항에 따른 비밀번호 검증 방법도 공부해보기. 아직 구현 안 함
+        User user = User.of(email, passwordEncoder.encode(password), name, nickname, gender, "USER");
 
         userRepository.save(user);
+        return true;
+    }
+
+    @Transactional
+    public boolean deleteUser(String nickname) {
+        User user = userRepository.findByNickname(nickname);
+        if (user == null || user.isDeleted()) return false;
+
+        user.delete();
         return true;
     }
 }
