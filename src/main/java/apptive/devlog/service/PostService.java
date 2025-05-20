@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import apptive.devlog.domain.Post;
 import apptive.devlog.domain.User;
@@ -20,6 +21,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public boolean createPost(PostCreateDto postCreateDto, String nickname) {
         String title = postCreateDto.title();
         String content = postCreateDto.content();
@@ -37,6 +39,7 @@ public class PostService {
         return true;
     }
 
+    @Transactional
     public boolean updatePost(Long postId, PostUpdateDto postUpdateDto, String nickname) {
         String title = postUpdateDto.title();
         String content = postUpdateDto.content();
@@ -54,6 +57,7 @@ public class PostService {
         return true;
     }
 
+    @Transactional
     public boolean deletePost(Long postId, String nickname) {
         User user = userRepository.findByNickname(nickname);
         Optional<Post> currPost = postRepository.findById(postId);
@@ -67,10 +71,12 @@ public class PostService {
         return true;
     }
 
+    @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Post> getAllPostsByNickname(String nickname) {
         User user = userRepository.findByNickname(nickname);
         if (user == null) return null;

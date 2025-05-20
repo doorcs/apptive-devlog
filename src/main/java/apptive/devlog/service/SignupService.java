@@ -2,6 +2,7 @@ package apptive.devlog.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import apptive.devlog.domain.Gender;
 import apptive.devlog.domain.User;
@@ -16,6 +17,7 @@ public class SignupService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public boolean signupProcess(SignupDto signupDto) {
         String email = signupDto.email();
         String password = signupDto.password();
