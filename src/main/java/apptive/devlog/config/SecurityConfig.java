@@ -47,11 +47,11 @@ public class SecurityConfig {
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterAt(signinFilter, UsernamePasswordAuthenticationFilter.class) // 기존 UsernamePassword... 필터를 대체
             .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/", "/signup", "/signin").permitAll()
-                .requestMatchers(HttpMethod.GET, "/posts").permitAll()
-                .requestMatchers(HttpMethod.POST, "/posts").hasRole("USER")
-                .requestMatchers(HttpMethod.PUT, "/posts").hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/posts").hasRole("USER")
+                .requestMatchers("/api/v1/auth/signin").permitAll()
+                .requestMatchers(HttpMethod.GET, "/", "/api/v1/posts").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/signup", "/api/v1/posts/{postId}").hasRole("USER")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/posts/{postId}").hasRole("USER")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/posts", "/api/v1/auth/{nickname}").hasRole("USER")
                 .anyRequest().authenticated())
             .sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

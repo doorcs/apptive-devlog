@@ -42,7 +42,7 @@ public class SigninFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse rsp, FilterChain chain)
         throws ServletException, IOException {
 
-        if (!req.getRequestURI().equals("/signin") || !req.getMethod().equals("POST")) {
+        if (!req.getRequestURI().equals("/api/v1/auth/signin") || !req.getMethod().equals("POST")) {
             chain.doFilter(req, rsp);
             return;
         } // 로그인 요청 && POST 요청이 아닐 경우 다음 filter로 넘겨주기
