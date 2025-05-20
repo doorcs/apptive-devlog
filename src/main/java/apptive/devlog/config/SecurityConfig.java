@@ -47,9 +47,9 @@ public class SecurityConfig {
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterAt(signinFilter, UsernamePasswordAuthenticationFilter.class) // 기존 UsernamePassword... 필터를 대체
             .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/api/v1/auth/signin").permitAll()
+                .requestMatchers("/api/v1/auth/signup", "/api/v1/auth/signin").permitAll() // 필터를 통해 회원가입을 처리하기 때문에, POST로 제한하면 안 됨!!!
                 .requestMatchers(HttpMethod.GET, "/", "/api/v1/posts").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/auth/signup", "/api/v1/posts/{postId}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/posts/{postId}").hasRole("USER")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/posts/{postId}").hasRole("USER")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/posts", "/api/v1/auth/{nickname}").hasRole("USER")
                 .anyRequest().authenticated())
