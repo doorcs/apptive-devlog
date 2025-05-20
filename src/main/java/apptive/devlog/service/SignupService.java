@@ -26,6 +26,11 @@ public class SignupService {
         String nickname = signupDto.nickname();
         Gender gender = signupDto.gender();
 
+        if (email == null || password == null || name == null || nickname == null || gender == null || email.isEmpty()
+            || password.isEmpty() || name.isEmpty() || nickname.isEmpty() || gender.toString().isEmpty()) {
+            return false;
+        }
+
         Boolean isEmailDuplicated = userRepository.existsByEmail(email);
         Boolean isNicknameDuplicated = userRepository.existsByNickname(nickname);
 
