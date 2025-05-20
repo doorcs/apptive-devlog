@@ -1,7 +1,6 @@
 package apptive.devlog.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import apptive.devlog.domain.Post;
 import apptive.devlog.dto.PostCreateDto;
 import apptive.devlog.dto.PostUpdateDto;
 import apptive.devlog.dto.PostResponseDto;
@@ -46,19 +44,15 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDto>> getAllPosts(@RequestParam(required = false) String nickname) {
-        List<Post> posts;
+        List<PostResponseDto> postResponseDtos;
         if (nickname != null && !nickname.isEmpty()) {
-            posts = postService.getAllPostsByNickname(nickname);
-            if (posts == null || posts.isEmpty()) {
+            postResponseDtos = postService.getAllPostsByNickname(nickname);
+            if (postResponseDtos == null || postResponseDtos.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
         } else {
-            posts = postService.getAllPosts();
+            postResponseDtos = postService.getAllPosts();
         }
-
-        List<PostResponseDto> postResponseDtos = posts.stream()
-            .map(PostResponseDto::new)
-            .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(postResponseDtos);
     }
