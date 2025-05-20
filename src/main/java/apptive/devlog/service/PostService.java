@@ -31,10 +31,8 @@ public class PostService {
             return false;
         }
 
-        Post post = new Post();
-        post.setTitle(title);
-        post.setContent(content);
-        post.setUser(user);
+        Post post = Post.of(title, content, user.getId());
+
         postRepository.save(post);
         return true;
     }
@@ -65,22 +63,31 @@ public class PostService {
         if (user == null || currPost.isEmpty()) return false;
 
         Post post = currPost.get();
-        if (!post.getUser().getNickname().equals(user.getNickname())) return false;
+        if (post.isDeleted() || !post.getUserId().equals(user.getId())) return false;
 
-        postRepository.delete(post);
+        post.delete();
         return true;
     }
 
     @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        List<Post> tmp = postRepository.findAll();
+        return maskDeletedPosts(tmp);
     }
 
     @Transactional(readOnly = true)
     public List<Post> getAllPostsByNickname(String nickname) {
         User user = userRepository.findByNickname(nickname);
-        if (user == null) return null;
+        if (user == null || user.isDeleted()) return null;
 
-        return postRepository.findAllByUser(user);
+        List<Post> tmp = postRepository.findAllByUserId(user.getId());
+        if (tmp == null || tmp.isEmpty()) return null;
+        return maskDeletedPosts(tmp);
+    }
+
+    private List<Post> maskDeletedPosts(List<Post> posts) {
+        return posts.stream()
+            .filter(post -> !post.isDeleted())
+            .toList();
     }
 }
