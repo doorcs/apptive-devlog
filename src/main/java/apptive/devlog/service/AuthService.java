@@ -47,4 +47,14 @@ public class AuthService {
         userRepository.save(user);
         return true;
     }
+
+    @Transactional
+    public boolean deleteUser(String nickname) {
+        User user = userRepository.findByNickname(nickname);
+        if (user == null) {
+            return false;
+        }
+        userRepository.delete(user);
+        return true;
+    }
 }
