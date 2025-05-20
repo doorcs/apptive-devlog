@@ -45,4 +45,22 @@ public class CommentService {
         commentRepository.save(comment);
         return true;
     }
+
+    @Transactional
+    public boolean deleteComment(Long commentId, Long postId, String nickname) {
+        User user = userRepository.findByNickname(nickname);
+        Post post = postRepository.findById(postId).orElse(null);
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+
+        if (user == null || post == null || comment == null || comment.isDeleted()) {
+            return false;
+        }
+
+        if (!comment.getPostId().equals(post.getId())) {
+            return false;
+        }
+
+        comment.delete();
+        return true;
+    }
 }
