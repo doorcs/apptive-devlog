@@ -45,32 +45,6 @@ public class PostController {
         else return ResponseEntity.badRequest().body("게시글 작성 실패");
     }
 
-    // @GetMapping("/posts")
-    // public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-    //     List<Post> posts = postService.getAllPosts();
-    //     List<PostResponseDto> postResponseDtos = posts.stream()
-    //         .map(PostResponseDto::new)
-    //         .collect(Collectors.toList());
-    //
-    //     return ResponseEntity.ok().body(postResponseDtos);
-    // }
-
-    // @GetMapping("/posts")
-    // public ResponseEntity<List<PostResponseDto>> getAllPostsByNickname(@RequestParam String nickname) {
-    //     List<Post> posts = postService.getAllPostsByNickname(nickname);
-    //     if (posts == null || posts.isEmpty()) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-    //
-    //     List<PostResponseDto> postResponseDtos = posts.stream()
-    //         .map(PostResponseDto::new)
-    //         .collect(Collectors.toList());
-    //
-    //     return ResponseEntity.ok().body(postResponseDtos);
-    // }
-
-    // 동일한 HTTP 메서드 + 요청 경로를 사용하는 메서드는 반드시 유일해야 함!!
-
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDto>> getAllPosts(@RequestParam(required = false) String nickname) {
         List<Post> posts;
