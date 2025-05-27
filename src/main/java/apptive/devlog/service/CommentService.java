@@ -24,6 +24,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     @Transactional
     public boolean createComment(CommentCreateDto commentCreateDto, Long postId, String nickname) {
@@ -43,12 +44,24 @@ public class CommentService {
             }
             Comment comment = Comment.of(content, postId, user.getId(), parentCommentId);
             commentRepository.save(comment);
+            sendPostAuthorNotification(post);
             return true;
         }
 
         Comment comment = Comment.of(content, postId, user.getId());
         commentRepository.save(comment);
+        sendPostAuthorNotification(post);
         return true;
+    }
+
+    private void sendPostAuthorNotification(Post post) {
+        if (post == null) return;
+        User author = userRepository.findById(post.getUserId()).orElse(null);
+        if (author != null && !author.isDeleted()) {
+            String subject = "포스팅 댓글 알림";
+            String text = "회원님의 글에 새로운 댓글이 달렸습니다.";
+            emailService.sendEmail(author.getEmail(), subject, text);
+        }
     }
 
     @Transactional
